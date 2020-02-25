@@ -71,7 +71,7 @@ inline T QWordSwapC( T dw )
 #define DWordSwap DWordSwapC
 #define QWordSwap QWordSwapC
 
-#if defined _WIN32 || defined __DOS__
+#if defined _WIN32 || defined __DOS__ || defined __psp__
 #define __LITTLE_ENDIAN 4321
 #define __BIG_ENDIAN 1234
 #define __BYTE_ORDER __LITTLE_ENDIAN //!!!
