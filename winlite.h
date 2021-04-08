@@ -41,7 +41,9 @@
 // the parts of the code where we need to use winsock2 - so include winsock2
 // first...
 #include <winsock2.h>
+#define HSPRITE WINAPI_HSPRITE
 #include <windows.h>
+#undef HSPRITE
 #include <dbghelp.h>
 #undef PostMessage
 #undef GetCurrentTime
