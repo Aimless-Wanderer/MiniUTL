@@ -40,7 +40,7 @@ inline T DWordSwapC( T dw )
 	uint32 temp;
 #if defined( __ICC )
 	temp = _byteswap_ulong( *(uint32*)&dw );
-#elif defined( __clang__ ) || __GNUC__ >= 4
+#elif defined( __clang__ ) || GCC_VERSION >= 40300
 	temp = __builtin_bswap32( *(uint32*)&dw );
 #else
 	temp =    *((uint32 *)&dw) >> 24;
@@ -58,7 +58,7 @@ inline T QWordSwapC( T dw )
 	uint64 temp;
 #if defined( __ICC )
 	temp = _byteswap_uint64( *(uint64*)&dw );
-#elif defined( __clang__ ) || __GNUC__ >= 4
+#elif defined( __clang__ ) || GCC_VERSION >= 40300
 	temp = __builtin_bswap64( *(uint64*)&dw );
 #else
 	temp = (uint64)DWordSwapC( (uint32)( ( *(uint64*)&dw ) >> 32 ) );
@@ -136,58 +136,6 @@ inline T QWordSwapC( T dw )
 	inline uint64 LittleQWord( uint64 val )	{ int test = 1; return ( *(char *)&test == 1 ) ? val : QWordSwap( val ); }
 	inline float LittleFloat( float val )	{ int test = 1; return ( *(char *)&test == 1 ) ? val : DWordSwap( val ); }
 
-#endif
-
-#if __BYTE_ORDER == __BIG_ENDIAN
-	#if defined ( _PS3 )
-		inline uint32 LoadLittleDWord( uint32 *base, unsigned int dwordIndex )
-		{
-			return __lwbrx( base + dwordIndex );
-		}
-
-		inline void StoreLittleDWord( uint32 *base, unsigned int dwordIndex, uint32 dword )
-		{
-			__stwbrx( base + dwordIndex, dword );
-		}
-		inline uint64 LoadLittleInt64( uint64 *base, unsigned int nWordIndex )
-		{
-			return __ldbrx( base + nWordIndex );
-		}
-
-		inline void StoreLittleInt64( uint64 *base, unsigned int nWordIndex, uint64 nWord )
-		{
-			__stdbrx( base + nWordIndex, nWord );
-		}
-	#else
-		inline uint32 LoadLittleDWord( uint32 *base, unsigned int dwordIndex )
-		{
-			return __loadwordbytereverse( dwordIndex<<2, base );
-		}
-
-		inline void StoreLittleDWord( uint32 *base, unsigned int dwordIndex, uint32 dword )
-		{
-			__storewordbytereverse( dword, dwordIndex<<2, base );
-		}
-		inline uint64 LoadLittleInt64( uint64 *base, unsigned int nWordIndex )
-		{
-			return __loaddoublewordbytereverse( nWordIndex<<2, base );
-		}
-
-		inline void StoreLittleInt64( uint64 *base, unsigned int nWordIndex, uint64 nWord )
-		{
-			__storedoublewordbytereverse( nWord, nWordIndex<<2, base );
-		}
-	#endif
-#else
-	inline uint32 LoadLittleDWord( uint32 *base, unsigned int dwordIndex )
-	{
-		return LittleDWord( base[dwordIndex] );
-	}
-
-	inline void StoreLittleDWord( uint32 *base, unsigned int dwordIndex, uint32 dword )
-	{
-		base[dwordIndex] = LittleDWord(dword);
-	}
 #endif
 
 #endif // #ifndef MINBASE_ENDIAN_H
